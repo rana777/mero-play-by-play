@@ -1,35 +1,16 @@
 version: 2
-
-    jobs:
-        # The test job
-        test:
-            working_directory: ~/mero-pbp
-            docker:
-                - image: circleci/node:10-browsers
-            steps:
-                # Checkout the code from the branch into the working_directory
-                - checkout
-                # Log the current branch
-                - run:
-                    name: Show current branch
-                    command: echo ${CIRCLE_BRANCH}
-                # Restore local dependencies from cache
-                - restore_cache:
-                    keys:
-                    - v1-dependencies-{{ checksum "package-lock.json" }}
-                    - v1-dependencies-
-                # Install project dependencies
-                - run:
-                    name: Install local dependencies
-                    command: npm install
-                # Cache local dependencies if they don't exist
-                - save_cache:
-                    key: v1-dependencies-{{ checksum "package-lock.json" }}
-                    paths:
-                        - node_modules
-                # Lint the source code
-                - run:
-                    npm ng build --prod
-                # Test the source code
-         
-              
+jobs:
+  build:
+    working_directory: ~/my-project
+    docker:
+      - image: circleci/node:8-browsers
+    steps:
+      - checkout
+      - restore_cache:
+          key: AngularCircleCI-{{ .Branch }}-{{ checksum "package.json" }}
+      - run: npm install
+      - save_cache:
+          key: AngularCircleCI-{{ .Branch }}-{{ checksum "package.json" }}
+          paths:
+            - "node_modules"
+      - run: xvfb-run -a npm run test -- --single-run --no-progress --browser=ChromeNoSandbox
