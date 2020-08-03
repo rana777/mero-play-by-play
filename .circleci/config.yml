@@ -29,11 +29,7 @@ version: 2
                         - node_modules
                 # Lint the source code
                 - run:
-                    name: Linting
-                    command: npm run lint
+                    npm ng build --prod
                 # Test the source code
-                - run:
-                    name: Testing
-                    command: npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
-                # End to End test
+         
               
